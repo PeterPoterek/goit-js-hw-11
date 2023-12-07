@@ -1,11 +1,13 @@
 import axios from 'axios';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
+import Notiflix from 'notiflix';
 
 const gallery = document.querySelector('#gallery');
 const searchForm = document.querySelector('#search-form');
-const imagesToRender = [];
+const imagesToRenderArr = [];
 
+const imagesPerPage = 40;
 let firstFetch = false;
 
 const handleSearch = e => {
@@ -37,14 +39,16 @@ const fetchPixabayAPI = async search => {
         image_type: 'photo',
         orientation: 'horizontal',
         safesearch: true,
-        per_page: 40,
+        per_page: imagesPerPage,
       },
     });
+    Notiflix.Notify.success(`Hooray! We found ${res.data.totalHits} images.`);
+
     renderImages(res.data.hits);
     scrollToImages();
     firstFetch = true;
   } catch (err) {
-    console.log(err);
+    Notiflix.Notify.failure(err);
   }
 };
 const renderImages = images => {
