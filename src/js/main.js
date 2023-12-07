@@ -43,16 +43,25 @@ const renderImages = images => {
     const info = document.createElement('div');
     info.setAttribute('class', 'info');
 
-    const likes = document.createElement('p');
-    likes.setAttribute('class', 'info-item');
+    const likesLabel = document.createElement('p');
+    likesLabel.setAttribute('class', 'info-item');
+    const likesText = document.createElement('b');
+    likesText.textContent = 'Likes';
+    likesLabel.append(likesText);
 
-    const views = document.createElement('p');
-    views.setAttribute('class', 'info-item');
+    const viewsLabel = document.createElement('p');
+    viewsLabel.setAttribute('class', 'info-item');
+    const viewsText = document.createElement('b');
+    viewsText.textContent = 'Views';
+    viewsLabel.append(viewsText);
 
-    const downloads = document.createElement('p');
-    downloads.setAttribute('class', 'info-item');
+    const downloadsLabel = document.createElement('p');
+    downloadsLabel.setAttribute('class', 'info-item');
+    const downloadsText = document.createElement('b');
+    downloadsText.textContent = 'Downloads';
+    downloadsLabel.append(downloadsText);
 
-    info.append(likes, views, downloads);
+    info.append(likesLabel, viewsLabel, downloadsLabel);
 
     photoCard.append(img, info);
 
