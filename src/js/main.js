@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const gallery = document.querySelector('#gallery');
 const searchForm = document.querySelector('#search-form');
-
+const imagesToRender = [];
 const handleSearch = e => {
   e.preventDefault();
 
@@ -30,9 +30,34 @@ const fetchPixabayAPI = async search => {
 
 const renderImages = images => {
   images.forEach(image => {
+    console.log(image);
+
+    const photoCard = document.createElement('div');
+    photoCard.setAttribute('class', 'photo-card');
+
     const img = document.createElement('img');
     img.setAttribute('src', image.webformatURL);
+    img.setAttribute('alt', 'Image');
+    img.setAttribute('loading', 'lazy');
 
-    gallery.append(img);
+    const info = document.createElement('div');
+    info.setAttribute('class', 'info');
+
+    const likes = document.createElement('p');
+    likes.setAttribute('class', 'info-item');
+
+    const views = document.createElement('p');
+    views.setAttribute('class', 'info-item');
+
+    const downloads = document.createElement('p');
+    downloads.setAttribute('class', 'info-item');
+
+    info.append(likes, views, downloads);
+
+    photoCard.append(img, info);
+
+    imagesToRender.push(photoCard);
   });
+
+  gallery.append(...imagesToRender);
 };
