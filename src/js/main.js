@@ -1,6 +1,14 @@
 import axios from 'axios';
 
 const gallery = document.querySelector('#gallery');
+const searchForm = document.querySelector('#search-form');
+
+const handleSearch = e => {
+  e.preventDefault();
+
+  fetchPixabayAPI(e.target.searchQuery.value);
+};
+searchForm.addEventListener('submit', handleSearch);
 
 const fetchPixabayAPI = async search => {
   const url = 'https://pixabay.com/api/';
@@ -13,18 +21,15 @@ const fetchPixabayAPI = async search => {
         q: search,
       },
     });
-    console.log(res.data.hits);
+    // console.log(res.data.hits);
     renderImages(res.data.hits);
   } catch (err) {
     console.log(err);
   }
 };
 
-fetchPixabayAPI('cats');
-
 const renderImages = images => {
   images.forEach(image => {
-    console.log(image);
     const img = document.createElement('img');
     img.setAttribute('src', image.webformatURL);
 
