@@ -1,4 +1,6 @@
 import axios from 'axios';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const gallery = document.querySelector('#gallery');
 const searchForm = document.querySelector('#search-form');
@@ -33,14 +35,19 @@ const fetchPixabayAPI = async search => {
 
 const renderImages = images => {
   images.forEach(image => {
+    console.log(image);
     const photoCard = document.createElement('div');
     photoCard.setAttribute('class', 'photo-card');
 
-    const img = document.createElement('img');
-    img.setAttribute('src', image.webformatURL);
-    img.setAttribute('alt', image.tags);
-    img.setAttribute('loading', 'lazy');
+    const imgFull = document.createElement('a');
+    imgFull.setAttribute('href', image.largeImageURL);
+    imgFull.setAttribute('loading', 'lazy');
 
+    const imgSmall = document.createElement('img');
+    imgSmall.setAttribute('src', image.webformatURL);
+    imgSmall.setAttribute('alt', image.tags);
+
+    imgFull.append(imgSmall);
     const info = document.createElement('div');
     info.setAttribute('class', 'info');
 
@@ -67,11 +74,14 @@ const renderImages = images => {
 
     info.append(likesLabel, viewsLabel, downloadsLabel);
 
-    photoCard.append(img, info);
+    photoCard.append(imgFull, info);
 
     imagesToRender.push(photoCard);
   });
   console.log(images.length);
 
   gallery.append(...imagesToRender);
+  const lightbox = new SimpleLightbox('.gallery a');
 };
+
+console.log(lightbox);
