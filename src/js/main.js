@@ -15,6 +15,10 @@ const handleSearch = e => {
 
   if (e.target.searchQuery.value !== '') {
     fetchPixabayAPI(e.target.searchQuery.value);
+  } else {
+    Notiflix.Notify.failure(
+      'Sorry, there are no images matching your search query. Please try again.'
+    );
   }
 };
 searchForm.addEventListener('submit', handleSearch);
