@@ -13,7 +13,9 @@ let firstFetch = false;
 const handleSearch = e => {
   e.preventDefault();
 
-  fetchPixabayAPI(e.target.searchQuery.value);
+  if (e.target.searchQuery.value !== '') {
+    fetchPixabayAPI(e.target.searchQuery.value);
+  }
 };
 searchForm.addEventListener('submit', handleSearch);
 
@@ -42,7 +44,14 @@ const fetchPixabayAPI = async search => {
         per_page: imagesPerPage,
       },
     });
-    Notiflix.Notify.success(`Hooray! We found ${res.data.totalHits} images.`);
+
+    if (res.data.totalHits !== 0) {
+      Notiflix.Notify.success(`Hooray! We found ${res.data.totalHits} images.`);
+    } else {
+      Notiflix.Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+    }
 
     renderImages(res.data.hits);
     scrollToImages();
