@@ -19,6 +19,9 @@ const fetchPixabayAPI = async search => {
       params: {
         key: apiKey,
         q: search,
+        image_type: 'photo',
+        orientation: 'horizontal',
+        safesearch: true,
       },
     });
     // console.log(res.data.hits);
