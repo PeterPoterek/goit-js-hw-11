@@ -39,3 +39,7 @@ body {
   width: 400px;
   height: 400px;
 }
+.info-item {
+  display: flex;
+  flex-direction: column-reverse;
+}

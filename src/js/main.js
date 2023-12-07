@@ -46,18 +46,21 @@ const renderImages = images => {
     const likesLabel = document.createElement('p');
     likesLabel.setAttribute('class', 'info-item');
     const likesText = document.createElement('b');
+    likesLabel.textContent = image.likes;
     likesText.textContent = 'Likes';
     likesLabel.append(likesText);
 
     const viewsLabel = document.createElement('p');
     viewsLabel.setAttribute('class', 'info-item');
     const viewsText = document.createElement('b');
+    viewsLabel.textContent = image.views;
     viewsText.textContent = 'Views';
     viewsLabel.append(viewsText);
 
     const downloadsLabel = document.createElement('p');
     downloadsLabel.setAttribute('class', 'info-item');
     const downloadsText = document.createElement('b');
+    downloadsLabel.textContent = image.downloads;
     downloadsText.textContent = 'Downloads';
     downloadsLabel.append(downloadsText);
 
