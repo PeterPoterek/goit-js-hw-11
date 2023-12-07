@@ -22,9 +22,9 @@ const fetchPixabayAPI = async search => {
         image_type: 'photo',
         orientation: 'horizontal',
         safesearch: true,
+        per_page: 40,
       },
     });
-    // console.log(res.data.hits);
     renderImages(res.data.hits);
   } catch (err) {
     console.log(err);
@@ -33,14 +33,12 @@ const fetchPixabayAPI = async search => {
 
 const renderImages = images => {
   images.forEach(image => {
-    console.log(image);
-
     const photoCard = document.createElement('div');
     photoCard.setAttribute('class', 'photo-card');
 
     const img = document.createElement('img');
     img.setAttribute('src', image.webformatURL);
-    img.setAttribute('alt', 'Image');
+    img.setAttribute('alt', image.tags);
     img.setAttribute('loading', 'lazy');
 
     const info = document.createElement('div');
@@ -73,6 +71,7 @@ const renderImages = images => {
 
     imagesToRender.push(photoCard);
   });
+  console.log(images.length);
 
   gallery.append(...imagesToRender);
 };
