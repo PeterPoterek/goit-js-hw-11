@@ -16,14 +16,14 @@ const handleSearch = e => {
 searchForm.addEventListener('submit', handleSearch);
 
 const scrollToImages = () => {
-  if (firstFetch) {
-    const { height: cardHeight } =
-      gallery.firstElementChild.getBoundingClientRect();
-    window.scrollBy({
-      top: cardHeight * 2,
-      behavior: 'smooth',
-    });
-  }
+  // if (firstFetch) {
+  //   const { height: cardHeight } =
+  //     gallery.firstElementChild.getBoundingClientRect();
+  //   window.scrollBy({
+  //     top: cardHeight * 2,
+  //     behavior: 'smooth',
+  //   });
+  // }
 };
 const fetchPixabayAPI = async search => {
   const url = 'https://pixabay.com/api/';
@@ -47,54 +47,55 @@ const fetchPixabayAPI = async search => {
     console.log(err);
   }
 };
-
 const renderImages = images => {
-  images.forEach(image => {
-    console.log(image);
-    const photoCard = document.createElement('div');
+  const existingImages = document.querySelectorAll('.photo-card');
+  const imagesToRender = [];
+
+  images.forEach((image, index) => {
+    const photoCard = existingImages[index] || document.createElement('div');
     photoCard.setAttribute('class', 'photo-card');
 
-    const imgFull = document.createElement('a');
+    const imgFull = photoCard.querySelector('a') || document.createElement('a');
     imgFull.setAttribute('href', image.largeImageURL);
     imgFull.setAttribute('loading', 'lazy');
 
-    const imgSmall = document.createElement('img');
+    const imgSmall =
+      photoCard.querySelector('img') || document.createElement('img');
     imgSmall.setAttribute('src', image.webformatURL);
     imgSmall.setAttribute('alt', image.tags);
 
+    imgFull.innerHTML = '';
     imgFull.append(imgSmall);
-    const info = document.createElement('div');
+
+    const info =
+      photoCard.querySelector('.info') || document.createElement('div');
     info.setAttribute('class', 'info');
 
-    const likesLabel = document.createElement('p');
-    likesLabel.setAttribute('class', 'info-item');
-    const likesText = document.createElement('b');
-    likesLabel.textContent = image.likes;
-    likesText.textContent = 'Likes';
-    likesLabel.append(likesText);
+    const createInfoItem = (label, value) => {
+      const labelElement = document.createElement('p');
+      labelElement.setAttribute('class', 'info-item');
+      const labelText = document.createElement('b');
+      labelElement.textContent = value;
+      labelText.textContent = label;
+      labelElement.append(labelText);
+      return labelElement;
+    };
 
-    const viewsLabel = document.createElement('p');
-    viewsLabel.setAttribute('class', 'info-item');
-    const viewsText = document.createElement('b');
-    viewsLabel.textContent = image.views;
-    viewsText.textContent = 'Views';
-    viewsLabel.append(viewsText);
+    const likesLabel = createInfoItem('Likes', image.likes);
+    const viewsLabel = createInfoItem('Views', image.views);
+    const downloadsLabel = createInfoItem('Downloads', image.downloads);
 
-    const downloadsLabel = document.createElement('p');
-    downloadsLabel.setAttribute('class', 'info-item');
-    const downloadsText = document.createElement('b');
-    downloadsLabel.textContent = image.downloads;
-    downloadsText.textContent = 'Downloads';
-    downloadsLabel.append(downloadsText);
-
+    info.innerHTML = '';
     info.append(likesLabel, viewsLabel, downloadsLabel);
 
+    photoCard.innerHTML = '';
     photoCard.append(imgFull, info);
 
     imagesToRender.push(photoCard);
   });
-  console.log(images.length);
 
+  gallery.innerHTML = '';
   gallery.append(...imagesToRender);
+
   const lightbox = new SimpleLightbox('.gallery a');
 };
