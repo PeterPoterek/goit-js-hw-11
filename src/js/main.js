@@ -11,6 +11,27 @@ let firstFetch = false;
 let currentPage = 1;
 let imageToSearch = '';
 
+const handleInfiniteScroll = () => {
+  const observer = new IntersectionObserver(
+    entries => {
+      const lastCard = entries[0];
+
+      if (lastCard.isIntersecting) {
+        console.log('Last card is intersecting!');
+
+        // fetchPixabayAPI(imageToSearch, currentPage + 1);
+      }
+    },
+    { threshold: 0.5 }
+  );
+
+  const lastPhotoCard = document.querySelector('.photo-card:last-child');
+
+  if (lastPhotoCard) {
+    observer.observe(lastPhotoCard);
+  }
+};
+
 const handleSearch = e => {
   e.preventDefault();
 
@@ -51,6 +72,8 @@ const fetchPixabayAPI = async (search, currentPage) => {
     }
 
     renderImages(res.data.hits);
+    handleInfiniteScroll();
+
     firstFetch = true;
   } catch (err) {
     Notiflix.Notify.failure(err);
