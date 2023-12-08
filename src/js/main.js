@@ -34,6 +34,17 @@ const fetchPixabayAPI = async (search, currentPage) => {
     Notiflix.Notify.failure(err);
   }
 };
+
+const createInfoItem = (label, value) => {
+  const labelElement = document.createElement('p');
+  labelElement.setAttribute('class', 'info-item');
+  const labelText = document.createElement('b');
+  labelElement.textContent = value;
+  labelText.textContent = label;
+  labelElement.append(labelText);
+  return labelElement;
+};
+
 const renderImages = async data => {
   const images = await data;
   const existingImages = document.querySelectorAll('.photo-card');
@@ -58,16 +69,6 @@ const renderImages = async data => {
     const info =
       photoCard.querySelector('.info') || document.createElement('div');
     info.setAttribute('class', 'info');
-
-    const createInfoItem = (label, value) => {
-      const labelElement = document.createElement('p');
-      labelElement.setAttribute('class', 'info-item');
-      const labelText = document.createElement('b');
-      labelElement.textContent = value;
-      labelText.textContent = label;
-      labelElement.append(labelText);
-      return labelElement;
-    };
 
     const likesLabel = createInfoItem('Likes', image.likes);
     const viewsLabel = createInfoItem('Views', image.views);
@@ -96,6 +97,7 @@ const handleSearch = async e => {
     const images = fetchPixabayAPI(imageToSearch, currentPage);
 
     await renderImages(images);
+    handleInfiniteScroll();
   } else {
     Notiflix.Notify.failure(
       'Sorry, there are no images matching your search query. Please try again.'
@@ -106,7 +108,35 @@ searchForm.addEventListener('submit', handleSearch);
 
 const renderMoreImages = async () => {
   currentPage += 1;
-  const moreImages = fetchPixabayAPI(imageToSearch, currentPage);
+  const moreImages = await fetchPixabayAPI(imageToSearch, currentPage);
+  const imagesToRender = [];
+  moreImages.forEach(image => {
+    console.log(image);
+    const photoCard = document.createElement('div');
+    photoCard.setAttribute('class', 'photo-card');
+
+    const imgFull = document.createElement('a');
+    imgFull.setAttribute('href', image.largeImageURL);
+
+    const imgSmall = document.createElement('img');
+    imgSmall.setAttribute('src', image.webformatURL);
+
+    imgFull.append(imgSmall);
+
+    const info = document.createElement('div');
+
+    const likesLabel = createInfoItem('Likes', image.likes);
+    const viewsLabel = createInfoItem('Views', image.views);
+    const downloadsLabel = createInfoItem('Downloads', image.downloads);
+    info.append(likesLabel, viewsLabel, downloadsLabel);
+
+    photoCard.append(imgFull);
+    photoCard.append(info);
+
+    imagesToRender.push(photoCard);
+  });
+  gallery.append(...imagesToRender);
+  const lightbox = new SimpleLightbox('.gallery a');
 };
 
 const handleInfiniteScroll = () => {
@@ -115,7 +145,7 @@ const handleInfiniteScroll = () => {
       const lastCard = entries[0];
 
       if (lastCard.isIntersecting) {
-        // renderMoreImages();
+        renderMoreImages();
       }
     },
     { threshold: 0.5 }
