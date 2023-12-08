@@ -5,7 +5,6 @@ import Notiflix from 'notiflix';
 
 const gallery = document.querySelector('#gallery');
 const searchForm = document.querySelector('#search-form');
-const imagesToRenderArr = [];
 
 const imagesPerPage = 40;
 let firstFetch = false;
@@ -23,16 +22,6 @@ const handleSearch = e => {
 };
 searchForm.addEventListener('submit', handleSearch);
 
-const scrollToImages = () => {
-  // if (firstFetch) {
-  //   const { height: cardHeight } =
-  //     gallery.firstElementChild.getBoundingClientRect();
-  //   window.scrollBy({
-  //     top: cardHeight * 2,
-  //     behavior: 'smooth',
-  //   });
-  // }
-};
 const fetchPixabayAPI = async search => {
   const url = 'https://pixabay.com/api/';
   const apiKey = '41114633-51106070bf303d1c44ed5d4b9';
@@ -58,7 +47,6 @@ const fetchPixabayAPI = async search => {
     }
 
     renderImages(res.data.hits);
-    scrollToImages();
     firstFetch = true;
   } catch (err) {
     Notiflix.Notify.failure(err);
