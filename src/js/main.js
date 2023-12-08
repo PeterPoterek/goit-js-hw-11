@@ -31,8 +31,23 @@ const fetchPixabayAPI = async (search, currentPage) => {
 
     return res.data.hits;
   } catch (err) {
-    Notiflix.Notify.failure(err);
+    Notiflix.Notify.failure(
+      "We're sorry, but you've reached the end of search results."
+    );
   }
+};
+
+const scrollToStart = () => {
+  if (!firstFetchFlag) return;
+
+  const { height: cardHeight } = document
+    .querySelector('.gallery')
+    .firstElementChild.getBoundingClientRect();
+
+  window.scrollBy({
+    top: cardHeight * 2,
+    behavior: 'smooth',
+  });
 };
 
 const createInfoItem = (label, value) => {
@@ -93,6 +108,7 @@ const handleSearch = async e => {
   e.preventDefault();
 
   if (e.target.searchQuery.value !== '') {
+    scrollToStart();
     imageToSearch = e.target.searchQuery.value;
     const images = fetchPixabayAPI(imageToSearch, currentPage);
 
@@ -137,6 +153,7 @@ const renderMoreImages = async () => {
   });
   gallery.append(...imagesToRender);
   const lightbox = new SimpleLightbox('.gallery a');
+  handleInfiniteScroll();
 };
 
 const handleInfiniteScroll = () => {
