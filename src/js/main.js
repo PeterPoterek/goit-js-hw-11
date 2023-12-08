@@ -7,44 +7,9 @@ const gallery = document.querySelector('#gallery');
 const searchForm = document.querySelector('#search-form');
 
 const imagesPerPage = 40;
-let firstFetch = false;
+let firstFetchFlag = false;
 let currentPage = 1;
 let imageToSearch = '';
-
-const handleInfiniteScroll = () => {
-  const observer = new IntersectionObserver(
-    entries => {
-      const lastCard = entries[0];
-
-      if (lastCard.isIntersecting) {
-        console.log('Last card is intersecting!');
-
-        // fetchPixabayAPI(imageToSearch, currentPage + 1);
-      }
-    },
-    { threshold: 0.5 }
-  );
-
-  const lastPhotoCard = document.querySelector('.photo-card:last-child');
-
-  if (lastPhotoCard) {
-    observer.observe(lastPhotoCard);
-  }
-};
-
-const handleSearch = e => {
-  e.preventDefault();
-
-  if (e.target.searchQuery.value !== '') {
-    imageToSearch = e.target.searchQuery.value;
-    fetchPixabayAPI(imageToSearch, currentPage);
-  } else {
-    Notiflix.Notify.failure(
-      'Sorry, there are no images matching your search query. Please try again.'
-    );
-  }
-};
-searchForm.addEventListener('submit', handleSearch);
 
 const fetchPixabayAPI = async (search, currentPage) => {
   const url = 'https://pixabay.com/api/';
@@ -62,24 +27,15 @@ const fetchPixabayAPI = async (search, currentPage) => {
         per_page: imagesPerPage,
       },
     });
+    firstFetchFlag = true;
 
-    if (res.data.totalHits !== 0) {
-      Notiflix.Notify.success(`Hooray! We found ${res.data.totalHits} images.`);
-    } else {
-      Notiflix.Notify.failure(
-        'Sorry, there are no images matching your search query. Please try again.'
-      );
-    }
-
-    renderImages(res.data.hits);
-    handleInfiniteScroll();
-
-    firstFetch = true;
+    return res.data.hits;
   } catch (err) {
     Notiflix.Notify.failure(err);
   }
 };
-const renderImages = images => {
+const renderImages = async data => {
+  const images = await data;
   const existingImages = document.querySelectorAll('.photo-card');
   const imagesToRender = [];
 
@@ -130,4 +86,44 @@ const renderImages = images => {
   gallery.append(...imagesToRender);
 
   const lightbox = new SimpleLightbox('.gallery a');
+};
+
+const handleSearch = async e => {
+  e.preventDefault();
+
+  if (e.target.searchQuery.value !== '') {
+    imageToSearch = e.target.searchQuery.value;
+    const images = fetchPixabayAPI(imageToSearch, currentPage);
+
+    await renderImages(images);
+  } else {
+    Notiflix.Notify.failure(
+      'Sorry, there are no images matching your search query. Please try again.'
+    );
+  }
+};
+searchForm.addEventListener('submit', handleSearch);
+
+const renderMoreImages = async () => {
+  currentPage += 1;
+  const moreImages = fetchPixabayAPI(imageToSearch, currentPage);
+};
+
+const handleInfiniteScroll = () => {
+  const observer = new IntersectionObserver(
+    entries => {
+      const lastCard = entries[0];
+
+      if (lastCard.isIntersecting) {
+        // renderMoreImages();
+      }
+    },
+    { threshold: 0.5 }
+  );
+
+  const lastPhotoCard = document.querySelector('.photo-card:last-child');
+
+  if (lastPhotoCard) {
+    observer.observe(lastPhotoCard);
+  }
 };
