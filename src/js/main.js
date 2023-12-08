@@ -9,12 +9,14 @@ const searchForm = document.querySelector('#search-form');
 const imagesPerPage = 40;
 let firstFetch = false;
 let currentPage = 1;
+let imageToSearch = '';
 
 const handleSearch = e => {
   e.preventDefault();
 
   if (e.target.searchQuery.value !== '') {
-    fetchPixabayAPI(e.target.searchQuery.value, currentPage);
+    imageToSearch = e.target.searchQuery.value;
+    fetchPixabayAPI(imageToSearch, currentPage);
   } else {
     Notiflix.Notify.failure(
       'Sorry, there are no images matching your search query. Please try again.'
