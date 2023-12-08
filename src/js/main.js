@@ -11,6 +11,8 @@ let firstFetchFlag = false;
 let currentPage = 1;
 let imageToSearch = '';
 
+const lightbox = new SimpleLightbox('.gallery a');
+
 const fetchPixabayAPI = async (search, currentPage) => {
   const url = 'https://pixabay.com/api/';
   const apiKey = '41114633-51106070bf303d1c44ed5d4b9';
@@ -61,6 +63,8 @@ const createInfoItem = (label, value) => {
 };
 
 const renderImages = async data => {
+  if (!data) return;
+
   const images = await data;
   const existingImages = document.querySelectorAll('.photo-card');
   const imagesToRender = [];
@@ -101,7 +105,7 @@ const renderImages = async data => {
   gallery.innerHTML = '';
   gallery.append(...imagesToRender);
 
-  const lightbox = new SimpleLightbox('.gallery a');
+  lightbox.refresh();
 };
 
 const handleSearch = async e => {
@@ -122,12 +126,12 @@ const handleSearch = async e => {
 };
 searchForm.addEventListener('submit', handleSearch);
 
-const renderMoreImages = async () => {
+const renderMoreImages = async data => {
+  if (!data) return;
+
   currentPage += 1;
-  const moreImages = await fetchPixabayAPI(imageToSearch, currentPage);
   const imagesToRender = [];
-  moreImages.forEach(image => {
-    console.log(image);
+  data.forEach(image => {
     const photoCard = document.createElement('div');
     photoCard.setAttribute('class', 'photo-card');
 
@@ -152,17 +156,18 @@ const renderMoreImages = async () => {
     imagesToRender.push(photoCard);
   });
   gallery.append(...imagesToRender);
-  const lightbox = new SimpleLightbox('.gallery a');
+  lightbox.refresh();
   handleInfiniteScroll();
 };
 
-const handleInfiniteScroll = () => {
+const handleInfiniteScroll = async () => {
+  const moreImages = await fetchPixabayAPI(imageToSearch, currentPage);
   const observer = new IntersectionObserver(
     entries => {
       const lastCard = entries[0];
 
       if (lastCard.isIntersecting) {
-        renderMoreImages();
+        renderMoreImages(moreImages);
       }
     },
     { threshold: 0.5 }
