@@ -190,8 +190,3 @@ const handleInfiniteScroll = async () => {
     observer.observe(lastPhotoCard);
   }
 };
-
-setInterval(() => {
-  console.log(totalFetchedImages);
-  console.log(currentPage);
-}, 1000);
