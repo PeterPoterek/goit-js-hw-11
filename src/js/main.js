@@ -7,7 +7,6 @@ const gallery = document.querySelector('#gallery');
 const searchForm = document.querySelector('#search-form');
 
 const imagesPerPage = 40;
-let firstFetchFlag = false;
 let currentPage = 1;
 let totalFetchedImages = 0;
 let imageToSearch = '';
@@ -19,7 +18,6 @@ const lightbox = new SimpleLightbox('.gallery a');
 const fetchPixabayAPI = async (search, currentPage) => {
   const url = 'https://pixabay.com/api/';
   const apiKey = '41114633-51106070bf303d1c44ed5d4b9';
-
   try {
     const res = await axios.get(url, {
       params: {
@@ -70,38 +68,37 @@ const renderImages = async data => {
 
   images.forEach((image, index) => {
     const photoCard = existingImages[index] || document.createElement('div');
-    photoCard.setAttribute('class', 'photo-card');
+    photoCard.classList.add('photo-card'); // Use classList to add a class
 
     const imgFull = photoCard.querySelector('a') || document.createElement('a');
     imgFull.setAttribute('href', image.largeImageURL);
     imgFull.setAttribute('loading', 'lazy');
 
     const imgSmall =
-      photoCard.querySelector('img') || document.createElement('img');
+      imgFull.querySelector('img') || document.createElement('img');
     imgSmall.setAttribute('src', image.webformatURL);
     imgSmall.setAttribute('alt', image.tags);
 
-    imgFull.innerHTML = '';
-    imgFull.append(imgSmall);
+    imgFull.innerHTML = ''; // Clear unnecessary content
+    imgFull.appendChild(imgSmall);
 
     const info =
       photoCard.querySelector('.info') || document.createElement('div');
-    info.setAttribute('class', 'info');
+    info.classList.add('info'); // Use classList to add a class
 
     const likesLabel = createInfoItem('Likes', image.likes);
     const viewsLabel = createInfoItem('Views', image.views);
     const downloadsLabel = createInfoItem('Downloads', image.downloads);
 
-    info.innerHTML = '';
+    info.innerHTML = ''; // Clear unnecessary content
     info.append(likesLabel, viewsLabel, downloadsLabel);
 
-    photoCard.innerHTML = '';
+    photoCard.innerHTML = ''; // Clear unnecessary content
     photoCard.append(imgFull, info);
 
     imagesToRender.push(photoCard);
   });
 
-  gallery.innerHTML = '';
   gallery.append(...imagesToRender);
 
   lightbox.refresh();
@@ -113,6 +110,7 @@ const scrollToTop = () => {
 
 const handleSearch = async e => {
   e.preventDefault();
+  fetchedAll = false;
   totalFetchedImages = 0;
   currentPage = 1;
 
@@ -144,10 +142,9 @@ const renderMoreImages = async data => {
 
   if (!data) return;
 
-  const imagesToRender = [];
-  data.forEach(image => {
+  const imagesToRender = data.map(image => {
     const photoCard = document.createElement('div');
-    photoCard.setAttribute('class', 'photo-card');
+    photoCard.classList.add('photo-card');
 
     const imgFull = document.createElement('a');
     imgFull.setAttribute('href', image.largeImageURL);
@@ -157,7 +154,7 @@ const renderMoreImages = async data => {
     imgSmall.setAttribute('src', image.webformatURL);
     imgSmall.setAttribute('alt', image.tags);
 
-    imgFull.append(imgSmall);
+    imgFull.appendChild(imgSmall);
 
     const info = document.createElement('div');
 
@@ -166,11 +163,11 @@ const renderMoreImages = async data => {
     const downloadsLabel = createInfoItem('Downloads', image.downloads);
     info.append(likesLabel, viewsLabel, downloadsLabel);
 
-    photoCard.append(imgFull);
-    photoCard.append(info);
+    photoCard.append(imgFull, info);
 
-    imagesToRender.push(photoCard);
+    return photoCard;
   });
+
   gallery.append(...imagesToRender);
 
   lightbox.refresh();
