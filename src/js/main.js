@@ -12,6 +12,8 @@ let currentPage = 1;
 let totalFetchedImages = 0;
 let imageToSearch = '';
 
+let fetchedAll = false;
+
 const lightbox = new SimpleLightbox('.gallery a');
 
 const fetchPixabayAPI = async (search, currentPage) => {
@@ -130,17 +132,18 @@ const handleSearch = async e => {
 searchForm.addEventListener('submit', handleSearch);
 
 const renderMoreImages = async data => {
+  if (fetchedAll) return;
+
   if (totalFetchedImages > 500) {
     Notiflix.Notify.failure(
       "We're sorry, but you've reached the end of search results."
     );
 
-    return;
+    fetchedAll = true;
   }
 
   if (!data) return;
 
-  currentPage += 1;
   const imagesToRender = [];
   data.forEach(image => {
     const photoCard = document.createElement('div');
@@ -148,9 +151,11 @@ const renderMoreImages = async data => {
 
     const imgFull = document.createElement('a');
     imgFull.setAttribute('href', image.largeImageURL);
+    imgFull.setAttribute('loading', 'lazy');
 
     const imgSmall = document.createElement('img');
     imgSmall.setAttribute('src', image.webformatURL);
+    imgSmall.setAttribute('alt', image.tags);
 
     imgFull.append(imgSmall);
 
@@ -167,8 +172,10 @@ const renderMoreImages = async data => {
     imagesToRender.push(photoCard);
   });
   gallery.append(...imagesToRender);
+
   lightbox.refresh();
   handleInfiniteScroll();
+  currentPage += 1;
 };
 
 const handleInfiniteScroll = async () => {
