@@ -61,6 +61,7 @@ const createInfoItem = (label, value) => {
 const renderImages = async data => {
   if (!data) return;
 
+  gallery.innerHTML = '';
   const images = await data;
   const existingImages = document.querySelectorAll('.photo-card');
   const imagesToRender = [];
@@ -111,11 +112,12 @@ const scrollToTop = () => {
 const handleSearch = async e => {
   e.preventDefault();
   totalFetchedImages = 0;
+  currentPage = 1;
 
   if (e.target.searchQuery.value !== '') {
+    scrollToTop();
     imageToSearch = e.target.searchQuery.value;
     const images = fetchPixabayAPI(imageToSearch, currentPage);
-    scrollToTop();
 
     await renderImages(images);
     handleInfiniteScroll();
@@ -191,4 +193,5 @@ const handleInfiniteScroll = async () => {
 
 setInterval(() => {
   console.log(totalFetchedImages);
+  console.log(currentPage);
 }, 1000);
