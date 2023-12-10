@@ -48,19 +48,6 @@ const fetchPixabayAPI = async (search, currentPage) => {
   }
 };
 
-const handleScroll = () => {
-  if (!firstFetchFlag) return;
-
-  const { height: cardHeight } = document
-    .querySelector('.gallery')
-    .firstElementChild.getBoundingClientRect();
-
-  window.scrollBy({
-    top: cardHeight * 2,
-    behavior: 'smooth',
-  });
-};
-
 const createInfoItem = (label, value) => {
   const labelElement = document.createElement('p');
   labelElement.setAttribute('class', 'info-item');
@@ -117,13 +104,18 @@ const renderImages = async data => {
   lightbox.refresh();
 };
 
+const scrollToTop = () => {
+  window.scroll({ top: 0, left: 0, behavior: 'smooth' });
+};
+
 const handleSearch = async e => {
   e.preventDefault();
+  totalFetchedImages = 0;
 
   if (e.target.searchQuery.value !== '') {
-    handleScroll();
     imageToSearch = e.target.searchQuery.value;
     const images = fetchPixabayAPI(imageToSearch, currentPage);
+    scrollToTop();
 
     await renderImages(images);
     handleInfiniteScroll();
@@ -136,7 +128,13 @@ const handleSearch = async e => {
 searchForm.addEventListener('submit', handleSearch);
 
 const renderMoreImages = async data => {
-  if (totalFetchedImages > 500) return;
+  if (totalFetchedImages > 500) {
+    Notiflix.Notify.failure(
+      "We're sorry, but you've reached the end of search results."
+    );
+
+    return;
+  }
 
   if (!data) return;
 
@@ -179,7 +177,6 @@ const handleInfiniteScroll = async () => {
 
       if (lastCard.isIntersecting) {
         renderMoreImages(moreImages);
-        handleScroll();
       }
     },
     { threshold: 0.5 }
