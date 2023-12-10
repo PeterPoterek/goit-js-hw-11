@@ -1,4 +1,5 @@
 import axios from 'axios';
+import InfiniteScroll from 'infinite-scroll';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import Notiflix from 'notiflix';
@@ -6,9 +7,10 @@ import Notiflix from 'notiflix';
 const gallery = document.querySelector('#gallery');
 const searchForm = document.querySelector('#search-form');
 
+const allImages = [];
 const imagesPerPage = 40;
-let firstFetchFlag = false;
 let currentPage = 1;
+let totalFetchedImages = 0;
 let imageToSearch = '';
 
 const lightbox = new SimpleLightbox('.gallery a');
@@ -29,7 +31,11 @@ const fetchPixabayAPI = async (search, currentPage) => {
         per_page: imagesPerPage,
       },
     });
-    firstFetchFlag = true;
+    totalFetchedImages += res.data.hits.length;
+
+    if (totalFetchedImages > 500) {
+      return [];
+    }
 
     return res.data.hits;
   } catch (err) {
@@ -39,19 +45,6 @@ const fetchPixabayAPI = async (search, currentPage) => {
 
     return [];
   }
-};
-
-const scrollToStart = () => {
-  if (!firstFetchFlag) return;
-
-  const { height: cardHeight } = document
-    .querySelector('.gallery')
-    .firstElementChild.getBoundingClientRect();
-
-  window.scrollBy({
-    top: cardHeight * 2,
-    behavior: 'smooth',
-  });
 };
 
 const createInfoItem = (label, value) => {
@@ -64,47 +57,39 @@ const createInfoItem = (label, value) => {
   return labelElement;
 };
 
-const renderImages = async data => {
+const createPhotoCard = image => {
+  const photoCard = document.createElement('div');
+  photoCard.setAttribute('class', 'photo-card');
+
+  const imgFull = document.createElement('a');
+  imgFull.setAttribute('href', image.largeImageURL);
+  imgFull.setAttribute('loading', 'lazy');
+
+  const imgSmall = document.createElement('img');
+  imgSmall.setAttribute('src', image.webformatURL);
+  imgSmall.setAttribute('alt', image.tags);
+
+  imgFull.appendChild(imgSmall);
+
+  const info = document.createElement('div');
+  info.setAttribute('class', 'info');
+
+  const likesLabel = createInfoItem('Likes', image.likes);
+  const viewsLabel = createInfoItem('Views', image.views);
+  const downloadsLabel = createInfoItem('Downloads', image.downloads);
+
+  info.append(likesLabel, viewsLabel, downloadsLabel);
+
+  photoCard.append(imgFull);
+  photoCard.append(info);
+
+  return photoCard;
+};
+
+const renderImages = data => {
   if (!data) return;
 
-  const images = await data;
-  const existingImages = document.querySelectorAll('.photo-card');
-  const imagesToRender = [];
-
-  images.forEach((image, index) => {
-    const photoCard = existingImages[index] || document.createElement('div');
-    photoCard.setAttribute('class', 'photo-card');
-
-    const imgFull = photoCard.querySelector('a') || document.createElement('a');
-    imgFull.setAttribute('href', image.largeImageURL);
-    imgFull.setAttribute('loading', 'lazy');
-
-    const imgSmall =
-      photoCard.querySelector('img') || document.createElement('img');
-    imgSmall.setAttribute('src', image.webformatURL);
-    imgSmall.setAttribute('alt', image.tags);
-
-    imgFull.innerHTML = '';
-    imgFull.append(imgSmall);
-
-    const info =
-      photoCard.querySelector('.info') || document.createElement('div');
-    info.setAttribute('class', 'info');
-
-    const likesLabel = createInfoItem('Likes', image.likes);
-    const viewsLabel = createInfoItem('Views', image.views);
-    const downloadsLabel = createInfoItem('Downloads', image.downloads);
-
-    info.innerHTML = '';
-    info.append(likesLabel, viewsLabel, downloadsLabel);
-
-    photoCard.innerHTML = '';
-    photoCard.append(imgFull, info);
-
-    imagesToRender.push(photoCard);
-  });
-
-  gallery.innerHTML = '';
+  const imagesToRender = data.map(createPhotoCard);
   gallery.append(...imagesToRender);
 
   lightbox.refresh();
@@ -112,13 +97,13 @@ const renderImages = async data => {
 
 const handleSearch = async e => {
   e.preventDefault();
+  totalFetchedImages = 0;
+  currentPage = 1;
 
   if (e.target.searchQuery.value !== '') {
-    scrollToStart();
     imageToSearch = e.target.searchQuery.value;
-    const images = fetchPixabayAPI(imageToSearch, currentPage);
-
-    await renderImages(images);
+    const images = await fetchPixabayAPI(imageToSearch, currentPage);
+    renderImages(images);
     handleInfiniteScroll();
   } else {
     Notiflix.Notify.failure(
@@ -126,58 +111,26 @@ const handleSearch = async e => {
     );
   }
 };
+
 searchForm.addEventListener('submit', handleSearch);
 
-const renderMoreImages = async data => {
-  if (!data) return;
-
-  currentPage += 1;
-  const imagesToRender = [];
-  data.forEach(image => {
-    const photoCard = document.createElement('div');
-    photoCard.setAttribute('class', 'photo-card');
-
-    const imgFull = document.createElement('a');
-    imgFull.setAttribute('href', image.largeImageURL);
-
-    const imgSmall = document.createElement('img');
-    imgSmall.setAttribute('src', image.webformatURL);
-
-    imgFull.append(imgSmall);
-
-    const info = document.createElement('div');
-
-    const likesLabel = createInfoItem('Likes', image.likes);
-    const viewsLabel = createInfoItem('Views', image.views);
-    const downloadsLabel = createInfoItem('Downloads', image.downloads);
-    info.append(likesLabel, viewsLabel, downloadsLabel);
-
-    photoCard.append(imgFull);
-    photoCard.append(info);
-
-    imagesToRender.push(photoCard);
+const handleInfiniteScroll = () => {
+  const infiniteScroll = new InfiniteScroll('#gallery', {
+    path: () => `?page=${currentPage + 1}`,
+    append: '.photo-card',
+    history: false,
   });
-  gallery.append(...imagesToRender);
-  lightbox.refresh();
-  handleInfiniteScroll();
-};
 
-const handleInfiniteScroll = async () => {
-  const moreImages = await fetchPixabayAPI(imageToSearch, currentPage);
-  const observer = new IntersectionObserver(
-    entries => {
-      const lastCard = entries[0];
-
-      if (lastCard.isIntersecting) {
-        renderMoreImages(moreImages);
-      }
-    },
-    { threshold: 0.5 }
-  );
-
-  const lastPhotoCard = document.querySelector('.photo-card:last-child');
-
-  if (lastPhotoCard) {
-    observer.observe(lastPhotoCard);
-  }
+  infiniteScroll.on('load', async () => {
+    currentPage += 1;
+    const newImages = await fetchPixabayAPI(imageToSearch, currentPage);
+    if (newImages.length > 0) {
+      renderImages(newImages);
+    } else {
+      Notiflix.Notify.failure(
+        "We're sorry, but you've reached the end of search results."
+      );
+      infiniteScroll.off('load');
+    }
+  });
 };
