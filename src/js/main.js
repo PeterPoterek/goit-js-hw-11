@@ -68,7 +68,7 @@ const renderImages = async data => {
 
   images.forEach((image, index) => {
     const photoCard = existingImages[index] || document.createElement('div');
-    photoCard.classList.add('photo-card'); // Use classList to add a class
+    photoCard.classList.add('photo-card');
 
     const imgFull = photoCard.querySelector('a') || document.createElement('a');
     imgFull.setAttribute('href', image.largeImageURL);
@@ -79,21 +79,21 @@ const renderImages = async data => {
     imgSmall.setAttribute('src', image.webformatURL);
     imgSmall.setAttribute('alt', image.tags);
 
-    imgFull.innerHTML = ''; // Clear unnecessary content
+    imgFull.innerHTML = '';
     imgFull.appendChild(imgSmall);
 
     const info =
       photoCard.querySelector('.info') || document.createElement('div');
-    info.classList.add('info'); // Use classList to add a class
+    info.classList.add('info');
 
     const likesLabel = createInfoItem('Likes', image.likes);
     const viewsLabel = createInfoItem('Views', image.views);
     const downloadsLabel = createInfoItem('Downloads', image.downloads);
 
-    info.innerHTML = ''; // Clear unnecessary content
+    info.innerHTML = '';
     info.append(likesLabel, viewsLabel, downloadsLabel);
 
-    photoCard.innerHTML = ''; // Clear unnecessary content
+    photoCard.innerHTML = '';
     photoCard.append(imgFull, info);
 
     imagesToRender.push(photoCard);
