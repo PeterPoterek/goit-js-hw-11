@@ -9,6 +9,7 @@ const searchForm = document.querySelector('#search-form');
 const imagesPerPage = 40;
 let firstFetchFlag = false;
 let currentPage = 1;
+let totalFetchedImages = 0;
 let imageToSearch = '';
 
 const lightbox = new SimpleLightbox('.gallery a');
@@ -29,6 +30,12 @@ const fetchPixabayAPI = async (search, currentPage) => {
         per_page: imagesPerPage,
       },
     });
+    totalFetchedImages += res.data.hits.length;
+
+    if (totalFetchedImages > 500) {
+      return [];
+    }
+
     firstFetchFlag = true;
 
     return res.data.hits;
@@ -129,6 +136,8 @@ const handleSearch = async e => {
 searchForm.addEventListener('submit', handleSearch);
 
 const renderMoreImages = async data => {
+  if (totalFetchedImages > 500) return;
+
   if (!data) return;
 
   currentPage += 1;
@@ -181,3 +190,7 @@ const handleInfiniteScroll = async () => {
     observer.observe(lastPhotoCard);
   }
 };
+
+setInterval(() => {
+  console.log(totalFetchedImages);
+}, 1000);
