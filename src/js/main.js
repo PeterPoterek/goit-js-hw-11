@@ -48,7 +48,7 @@ const fetchPixabayAPI = async (search, currentPage) => {
   }
 };
 
-const scrollToStart = () => {
+const handleScroll = () => {
   if (!firstFetchFlag) return;
 
   const { height: cardHeight } = document
@@ -121,7 +121,7 @@ const handleSearch = async e => {
   e.preventDefault();
 
   if (e.target.searchQuery.value !== '') {
-    scrollToStart();
+    handleScroll();
     imageToSearch = e.target.searchQuery.value;
     const images = fetchPixabayAPI(imageToSearch, currentPage);
 
@@ -179,6 +179,7 @@ const handleInfiniteScroll = async () => {
 
       if (lastCard.isIntersecting) {
         renderMoreImages(moreImages);
+        handleScroll();
       }
     },
     { threshold: 0.5 }
