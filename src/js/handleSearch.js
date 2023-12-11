@@ -21,7 +21,7 @@ const scrollToTop = () => {
 
 const handleSearch = async e => {
   e.preventDefault();
-  setFirstFetch = false;
+  setFirstFetch(true);
 
   if (e.target.searchQuery.value !== '') {
     scrollToTop();
