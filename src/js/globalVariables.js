@@ -10,6 +10,9 @@ const setCurrentSearch = newSearch => {
 const setCurrentPage = page => {
   currentPage = currentPage + page;
 };
+const resetCurrentPage = () => {
+  currentPage = 1;
+};
 
 const setFirstFetch = bool => {
   firstFetch = bool;
@@ -29,4 +32,5 @@ export {
   setFirstFetch,
   endOfResults,
   setEndOfResults,
+  resetCurrentPage,
 };
