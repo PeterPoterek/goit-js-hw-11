@@ -18,9 +18,15 @@ const fetchPixaBayApi = async (search, currentPage, imagesPerPage) => {
       },
     });
 
-    Notiflix.Notify.success(`Hooray! We found ${res.data.totalHits} images.`);
-
-    return res.data.hits;
+    if (res.data.hits.length === 0) {
+      Notiflix.Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+      return [];
+    } else {
+      Notiflix.Notify.success(`Hooray! We found ${res.data.totalHits} images.`);
+      return res.data.hits;
+    }
   } catch (err) {
     console.log(err);
     return [];

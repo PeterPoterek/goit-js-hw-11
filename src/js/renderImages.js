@@ -1,6 +1,8 @@
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
+import handleInfiniteScroll from './handleInfinteScrolling.js';
+
 const gallery = document.querySelector('#gallery');
 
 const imagesToRender = [];
@@ -51,6 +53,7 @@ const renderImages = data => {
 
   gallery.append(...imagesToRender);
   lightbox.refresh();
+  handleInfiniteScroll();
 };
 
 export { renderImages };
