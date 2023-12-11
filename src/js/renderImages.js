@@ -18,10 +18,10 @@ const createInfoItem = (label, value) => {
   return labelElement;
 };
 
-const renderImages = data => {
+const renderImages = (data, renderFlag = false) => {
   if (endOfResults) return;
 
-  if (firstFetch) {
+  if (renderFlag) {
     gallery.innerHTML = '';
     imagesToRender.length = 0;
   }

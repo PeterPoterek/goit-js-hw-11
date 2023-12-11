@@ -11,7 +11,7 @@ const url = 'https://pixabay.com/api/';
 const apiKey = '41114633-51106070bf303d1c44ed5d4b9';
 
 const fetchPixaBayApi = async (search, currentPage, imagesPerPage) => {
-  if (endOfResults) return;
+  if (endOfResults) return [];
 
   try {
     const res = await axios.get(url, {
@@ -32,8 +32,13 @@ const fetchPixaBayApi = async (search, currentPage, imagesPerPage) => {
       );
       return [];
     } else {
-      setFirstFetch(false);
-      Notiflix.Notify.success(`Hooray! We found ${res.data.totalHits} images.`);
+      if (firstFetch) {
+        Notiflix.Notify.success(
+          `Hooray! We found ${res.data.totalHits} images.`
+        );
+
+        setFirstFetch(false);
+      }
 
       if (currentPage >= Math.ceil(res.data.totalHits / imagesPerPage)) {
         Notiflix.Notify.failure(

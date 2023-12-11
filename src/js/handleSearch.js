@@ -33,7 +33,7 @@ const handleSearch = async e => {
       imagesPerPage
     );
 
-    renderImages(data);
+    renderImages(data, true);
   } else {
     Notiflix.Notify.failure(
       'Sorry, there are no images matching your search query. Please try again.'
