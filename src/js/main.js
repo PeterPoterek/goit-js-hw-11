@@ -8,4 +8,3 @@ import handleInfiniteScroll from './handleInfiniteScrolling.js';
 const searchForm = document.querySelector('#search-form');
 
 searchForm.addEventListener('submit', handleSearch);
-handleInfiniteScroll();

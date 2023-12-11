@@ -52,37 +52,4 @@ const renderImages = data => {
   lightbox.refresh();
 };
 
-const renderMoreImages = data => {
-  data.forEach(image => {
-    const photoCard = document.createElement('div');
-    photoCard.classList.add('photo-card');
-
-    const imgFull = document.createElement('a');
-    imgFull.setAttribute('href', image.largeImageURL);
-    imgFull.setAttribute('loading', 'lazy');
-
-    const imgSmall = document.createElement('img');
-    imgSmall.setAttribute('src', image.webformatURL);
-    imgSmall.setAttribute('alt', image.tags);
-
-    imgFull.append(imgSmall);
-
-    const info = document.createElement('div');
-    info.classList.add('info');
-
-    const likesLabel = createInfoItem('Likes', image.likes);
-    const viewsLabel = createInfoItem('Views', image.views);
-    const downloadsLabel = createInfoItem('Downloads', image.downloads);
-
-    info.append(likesLabel, viewsLabel, downloadsLabel);
-
-    photoCard.append(imgFull, info);
-
-    imagesToRender.push(photoCard);
-  });
-
-  gallery.append(...imagesToRender);
-  lightbox.refresh();
-};
-
-export { renderImages, renderMoreImages };
+export { renderImages };
