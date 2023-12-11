@@ -1,13 +1,9 @@
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-import handleInfiniteScroll from './handleInfinteScrolling.js';
-
 const gallery = document.querySelector('#gallery');
 
 const imagesToRender = [];
-
-const lightbox = new SimpleLightbox('.gallery a');
 
 const createInfoItem = (label, value) => {
   const labelElement = document.createElement('p');
@@ -52,8 +48,7 @@ const renderImages = data => {
   });
 
   gallery.append(...imagesToRender);
-  lightbox.refresh();
-  handleInfiniteScroll();
+  const lightbox = new SimpleLightbox('.gallery a');
 };
 
 export { renderImages };
