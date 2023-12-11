@@ -36,7 +36,7 @@ body {
 .search-form input:focus {
   outline: 2px solid #cbd5e1;
 }
-.search-form button {
+button {
   font-size: 1rem;
   font-weight: bold;
 
@@ -53,20 +53,21 @@ body {
   transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55),
     transform-origin 0.3s, position 0.3s;
 }
-.search-form button:hover {
+button:hover {
   color: #cbd5e1;
   background-color: #475569;
 
   transform: scale(1.1);
   transform-origin: center bottom;
   position: relative;
-  /* top: -5px; */
 }
 
 .gallery-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 .gallery {
@@ -106,4 +107,10 @@ body {
   text-align: center;
   font-size: 1.125rem;
   line-height: 1.75rem;
+}
+.load-more {
+  display: none;
+
+  /* position: absolute; */
+  /* bottom: 0; */
 }

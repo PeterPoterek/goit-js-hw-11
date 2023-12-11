@@ -1,8 +1,9 @@
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-const gallery = document.querySelector('#gallery');
+import { handleShowingLoadMoreNutton } from './handleInfiniteScrolling.js';
 
+const gallery = document.querySelector('#gallery');
 const imagesToRender = [];
 
 const createInfoItem = (label, value) => {
@@ -49,6 +50,7 @@ const renderImages = data => {
 
   gallery.append(...imagesToRender);
   const lightbox = new SimpleLightbox('.gallery a');
+  handleShowingLoadMoreNutton();
 };
 
 export { renderImages };
