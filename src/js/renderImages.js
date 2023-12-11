@@ -3,6 +3,8 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 
 import { handleShowingLoadMoreNutton } from './handleInfiniteScrolling.js';
 
+import { firstFetch, endOfResults } from './globalVariables.js';
+
 const gallery = document.querySelector('#gallery');
 const imagesToRender = [];
 
@@ -17,8 +19,12 @@ const createInfoItem = (label, value) => {
 };
 
 const renderImages = data => {
-  gallery.innerHTML = '';
-  imagesToRender.length = 0;
+  if (endOfResults) return;
+
+  if (firstFetch) {
+    gallery.innerHTML = '';
+    imagesToRender.length = 0;
+  }
 
   data.forEach(image => {
     const photoCard = document.createElement('div');

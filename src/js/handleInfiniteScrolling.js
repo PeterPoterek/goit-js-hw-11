@@ -1,4 +1,22 @@
+import {
+  currentSearch,
+  setCurrentSearch,
+  currentPage,
+  imagesPerPage,
+  setCurrentPage,
+} from './globalVariables.js';
+
+import fetchPixaBayApi from './fetchPixaBayAPI.js';
+import { renderImages } from './renderImages.js';
 const loadMoreButton = document.querySelector('.load-more');
+
+const handleButtonClick = async () => {
+  setCurrentPage(1);
+  const data = await fetchPixaBayApi(currentSearch, currentPage, imagesPerPage);
+
+  renderImages(data);
+};
+loadMoreButton.addEventListener('click', handleButtonClick);
 
 const handleShowingLoadMoreNutton = () => {
   loadMoreButton.style.display = 'none';
@@ -7,7 +25,6 @@ const handleShowingLoadMoreNutton = () => {
     const lastPhotoCard = entries[0];
     if (!lastPhotoCard.isIntersecting) return;
 
-    console.log('last card seen');
     loadMoreButton.style.display = 'block';
   });
 
