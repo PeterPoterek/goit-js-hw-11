@@ -10,10 +10,18 @@ import {
 import fetchPixaBayApi from './fetchPixaBayAPI.js';
 import { renderImages } from './renderImages.js';
 
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth',
+  });
+};
+
 const handleSearch = async e => {
   e.preventDefault();
 
   if (e.target.searchQuery.value !== '') {
+    scrollToTop();
     setCurrentSearch(e.target.searchQuery.value);
 
     const data = await fetchPixaBayApi(
