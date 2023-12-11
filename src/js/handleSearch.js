@@ -7,6 +7,7 @@ import {
   imagesPerPage,
   firstFetch,
   setFirstFetch,
+  setEndOfResults,
 } from './globalVariables.js';
 
 import fetchPixaBayApi from './fetchPixaBayAPI.js';
@@ -22,6 +23,7 @@ const scrollToTop = () => {
 const handleSearch = async e => {
   e.preventDefault();
   setFirstFetch(true);
+  setEndOfResults(false);
 
   if (e.target.searchQuery.value !== '') {
     scrollToTop();

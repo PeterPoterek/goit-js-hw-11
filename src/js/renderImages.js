@@ -7,6 +7,7 @@ import { firstFetch, endOfResults } from './globalVariables.js';
 
 const gallery = document.querySelector('#gallery');
 const imagesToRender = [];
+const lightbox = new SimpleLightbox('.gallery a');
 
 const createInfoItem = (label, value) => {
   const labelElement = document.createElement('p');
@@ -55,7 +56,7 @@ const renderImages = (data, renderFlag = false) => {
   });
 
   gallery.append(...imagesToRender);
-  const lightbox = new SimpleLightbox('.gallery a');
+  lightbox.refresh();
   handleShowingLoadMoreNutton();
 };
 
