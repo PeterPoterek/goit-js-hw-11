@@ -8,6 +8,9 @@ import {
 
 import fetchPixaBayApi from './fetchPixaBayAPI.js';
 import { renderImages } from './renderImages.js';
+
+const gallery = document.querySelector('#gallery');
+
 const loadMoreButton = document.querySelector('.load-more');
 
 const scrollToImage = () => {
@@ -31,6 +34,8 @@ const handleButtonClick = async () => {
 loadMoreButton.addEventListener('click', handleButtonClick);
 
 const handleShowingLoadMoreNutton = () => {
+  if (gallery.childNodes.length === 0) return;
+
   loadMoreButton.style.display = 'none';
 
   const observer = new IntersectionObserver(entries => {

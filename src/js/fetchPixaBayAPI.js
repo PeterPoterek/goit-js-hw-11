@@ -40,7 +40,7 @@ const fetchPixaBayApi = async (search, currentPage, imagesPerPage) => {
         setFirstFetch(false);
       }
 
-      if (currentPage >= Math.ceil(res.data.totalHits / imagesPerPage)) {
+      if (res.data.hits.length < imagesPerPage && currentPage != 1) {
         Notiflix.Notify.failure(
           "We're sorry, but you've reached the end of search results."
         );
