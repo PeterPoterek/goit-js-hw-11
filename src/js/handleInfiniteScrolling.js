@@ -5,6 +5,7 @@ import {
   imagesPerPage,
   setCurrentPage,
   endOfResults,
+  setEndOfResults,
 } from './globalVariables.js';
 
 import fetchPixaBayApi from './fetchPixaBayAPI.js';
@@ -26,9 +27,14 @@ const scrollToImage = () => {
 };
 
 const handleButtonClick = async () => {
-  if (endOfResults) return;
+  if (currentPage === 14) {
+    setEndOfResults(true);
+    return;
+  }
 
-  setCurrentPage(1);
+  if (gallery.childNodes.length >= 40) {
+    setCurrentPage(1);
+  }
   const data = await fetchPixaBayApi(currentSearch, currentPage, imagesPerPage);
 
   renderImages(data);
@@ -37,11 +43,14 @@ const handleButtonClick = async () => {
 loadMoreButton.addEventListener('click', handleButtonClick);
 
 const handleShowingLoadMoreNutton = () => {
-  if (gallery.childNodes.length === 0) return;
+  if (gallery.childNodes.length === 0 || endOfResults) return;
 
   loadMoreButton.style.display = 'none';
 
   const observer = new IntersectionObserver(entries => {
+    if (currentPage === 14) {
+      setEndOfResults(true);
+    }
     const lastPhotoCard = entries[0];
     if (!lastPhotoCard.isIntersecting) return;
 

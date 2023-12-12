@@ -13,7 +13,13 @@ const apiKey = '41114633-51106070bf303d1c44ed5d4b9';
 const gallery = document.querySelector('#gallery');
 
 const fetchPixaBayApi = async (search, currentPage, imagesPerPage) => {
-  if (endOfResults) return [];
+  console.log(currentPage, 'curr page');
+  if (endOfResults || currentPage === 14) {
+    Notiflix.Notify.failure(
+      "We're sorry, but you've reached the end of search results."
+    );
+    return [];
+  }
 
   try {
     const res = await axios.get(url, {
@@ -27,9 +33,6 @@ const fetchPixaBayApi = async (search, currentPage, imagesPerPage) => {
         per_page: imagesPerPage,
       },
     });
-    if (res.data.totalHits < gallery.childNodes.length) {
-      setEndOfResults(true);
-    }
 
     if (res.data.hits.length === 0) {
       Notiflix.Notify.failure(
@@ -43,14 +46,11 @@ const fetchPixaBayApi = async (search, currentPage, imagesPerPage) => {
         );
 
         setFirstFetch(false);
-      }
-
-      if (res.data.hits.length < imagesPerPage && currentPage != 1) {
+      } else if (res.data.hits.length < imagesPerPage) {
         Notiflix.Notify.failure(
           "We're sorry, but you've reached the end of search results."
         );
         setEndOfResults(true);
-        return [];
       }
 
       return res.data.hits;

@@ -47,4 +47,4 @@ setInterval(() => {
   console.log(currentSearch, 'currentSearch');
   console.log(firstFetch, 'firstFetch');
   console.log(endOfResults, 'endOfResults');
-}, 1000);
+}, 5000);
