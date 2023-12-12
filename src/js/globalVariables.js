@@ -40,11 +40,3 @@ export {
   setEndOfResults,
   resetCurrentPage,
 };
-
-setInterval(() => {
-  console.log(currentPage, 'currentPage');
-  console.log(imagesPerPage, 'imagesPerPage');
-  console.log(currentSearch, 'currentSearch');
-  console.log(firstFetch, 'firstFetch');
-  console.log(endOfResults, 'endOfResults');
-}, 5000);
