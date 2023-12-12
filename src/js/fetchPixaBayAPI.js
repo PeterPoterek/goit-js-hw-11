@@ -13,7 +13,6 @@ const apiKey = '41114633-51106070bf303d1c44ed5d4b9';
 const gallery = document.querySelector('#gallery');
 
 const fetchPixaBayApi = async (search, currentPage, imagesPerPage) => {
-  console.log(currentPage, 'curr page');
   if (endOfResults || currentPage === 14) {
     Notiflix.Notify.failure(
       "We're sorry, but you've reached the end of search results."
