@@ -10,13 +10,15 @@ import {
 const url = 'https://pixabay.com/api/';
 const apiKey = '41114633-51106070bf303d1c44ed5d4b9';
 
-const gallery = document.querySelector('#gallery');
+const loadMoreButton = document.querySelector('.load-more');
 
 const fetchPixaBayApi = async (search, currentPage, imagesPerPage) => {
   if (endOfResults || currentPage === 14) {
     Notiflix.Notify.failure(
       "We're sorry, but you've reached the end of search results."
     );
+
+    loadMoreButton.style.display = 'none';
     return [];
   }
 
@@ -49,6 +51,8 @@ const fetchPixaBayApi = async (search, currentPage, imagesPerPage) => {
         Notiflix.Notify.failure(
           "We're sorry, but you've reached the end of search results."
         );
+        loadMoreButton.style.display = 'none';
+
         setEndOfResults(true);
       }
 

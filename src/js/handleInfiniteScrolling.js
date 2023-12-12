@@ -29,7 +29,6 @@ const scrollToImage = () => {
 const handleButtonClick = async () => {
   if (currentPage === 14) {
     setEndOfResults(true);
-    return;
   }
 
   if (gallery.childNodes.length >= 40) {
@@ -54,7 +53,9 @@ const handleShowingLoadMoreNutton = () => {
     const lastPhotoCard = entries[0];
     if (!lastPhotoCard.isIntersecting) return;
 
-    loadMoreButton.style.display = 'block';
+    if (!endOfResults) {
+      loadMoreButton.style.display = 'block';
+    }
   });
 
   observer.observe(document.querySelector('.photo-card:last-child'));
