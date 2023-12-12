@@ -4,6 +4,7 @@ import {
   currentPage,
   imagesPerPage,
   setCurrentPage,
+  endOfResults,
 } from './globalVariables.js';
 
 import fetchPixaBayApi from './fetchPixaBayAPI.js';
@@ -25,6 +26,8 @@ const scrollToImage = () => {
 };
 
 const handleButtonClick = async () => {
+  if (endOfResults) return;
+
   setCurrentPage(1);
   const data = await fetchPixaBayApi(currentSearch, currentPage, imagesPerPage);
 

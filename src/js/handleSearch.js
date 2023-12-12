@@ -5,7 +5,7 @@ import {
   setCurrentSearch,
   currentPage,
   imagesPerPage,
-  firstFetch,
+  setImagesPerPage,
   setFirstFetch,
   setEndOfResults,
   resetCurrentPage,
@@ -13,6 +13,8 @@ import {
 
 import fetchPixaBayApi from './fetchPixaBayAPI.js';
 import { renderImages } from './renderImages.js';
+
+const gallery = document.querySelector('#gallery');
 
 const scrollToTop = () => {
   window.scrollTo({
@@ -23,6 +25,10 @@ const scrollToTop = () => {
 
 const handleSearch = async e => {
   e.preventDefault();
+
+  gallery.innerHTML = '';
+
+  setImagesPerPage(40);
   setFirstFetch(true);
   setEndOfResults(false);
   resetCurrentPage();

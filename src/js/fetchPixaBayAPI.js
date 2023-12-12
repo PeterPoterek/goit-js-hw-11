@@ -10,6 +10,8 @@ import {
 const url = 'https://pixabay.com/api/';
 const apiKey = '41114633-51106070bf303d1c44ed5d4b9';
 
+const gallery = document.querySelector('#gallery');
+
 const fetchPixaBayApi = async (search, currentPage, imagesPerPage) => {
   if (endOfResults) return [];
 
@@ -25,6 +27,9 @@ const fetchPixaBayApi = async (search, currentPage, imagesPerPage) => {
         per_page: imagesPerPage,
       },
     });
+    if (res.data.totalHits < gallery.childNodes.length) {
+      setEndOfResults(true);
+    }
 
     if (res.data.hits.length === 0) {
       Notiflix.Notify.failure(

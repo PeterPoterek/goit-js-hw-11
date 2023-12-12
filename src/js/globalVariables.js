@@ -1,10 +1,15 @@
-let currentPage = 1;
-let imagesPerPage = 40;
-let currentSearch = '';
-let firstFetch = true;
-let endOfResults = false;
+let currentPage;
+let imagesPerPage;
+let currentSearch;
+let firstFetch;
+let endOfResults;
+
 const setCurrentSearch = newSearch => {
   currentSearch = newSearch;
+};
+
+const setImagesPerPage = count => {
+  imagesPerPage = count;
 };
 
 const setCurrentPage = page => {
@@ -25,6 +30,7 @@ const setEndOfResults = bool => {
 export {
   currentPage,
   imagesPerPage,
+  setImagesPerPage,
   currentSearch,
   setCurrentSearch,
   setCurrentPage,
@@ -34,3 +40,11 @@ export {
   setEndOfResults,
   resetCurrentPage,
 };
+
+setInterval(() => {
+  console.log(currentPage, 'currentPage');
+  console.log(imagesPerPage, 'imagesPerPage');
+  console.log(currentSearch, 'currentSearch');
+  console.log(firstFetch, 'firstFetch');
+  console.log(endOfResults, 'endOfResults');
+}, 1000);
