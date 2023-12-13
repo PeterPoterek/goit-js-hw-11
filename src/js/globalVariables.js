@@ -47,7 +47,3 @@ export {
   totalImages,
   setTotalImages,
 };
-
-setInterval(() => {
-  console.log(endOfResults);
-}, 2000);

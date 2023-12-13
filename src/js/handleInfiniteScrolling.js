@@ -55,6 +55,3 @@ const handleShowingLoadMoreNutton = () => {
 };
 
 export { handleShowingLoadMoreNutton };
-setInterval(() => {
-  console.log(gallery.childNodes.length);
-}, 2000);
