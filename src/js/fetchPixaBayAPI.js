@@ -16,16 +16,21 @@ const loadMoreButton = document.querySelector('.load-more');
 const gallery = document.querySelector('#gallery');
 
 const fetchPixaBayApi = async (search, currentPage, imagesPerPage) => {
-  if (gallery.childNodes.length >= totalImages) {
+  if (gallery.childNodes.length >= totalImages || endOfResults) {
     Notiflix.Notify.failure(
       "We're sorry, but you've reached the end of search results."
     );
-
-    setEndOfResults(true);
     loadMoreButton.style.display = 'none';
+    setEndOfResults(true);
+    return;
   }
 
   try {
+    if (currentPage <= 0) {
+      Notiflix.Notify.failure('Invalid page number. Please try again.');
+      return [];
+    }
+
     const res = await axios.get(url, {
       params: {
         key: apiKey,
@@ -47,16 +52,12 @@ const fetchPixaBayApi = async (search, currentPage, imagesPerPage) => {
       if (firstFetch) {
         setTotalImages(res.data.totalHits);
         Notiflix.Notify.success(`Hooray! We found ${totalImages} images.`);
-
         setFirstFetch(false);
       }
 
       return res.data.hits;
     }
-  } catch (err) {
-    console.log(err);
-    return [];
-  }
+  } catch (err) {}
 };
 
 export default fetchPixaBayApi;
