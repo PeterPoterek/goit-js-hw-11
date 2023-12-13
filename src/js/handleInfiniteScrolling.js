@@ -27,10 +27,6 @@ const scrollToImage = () => {
 };
 
 const handleButtonClick = async () => {
-  if (currentPage === 14) {
-    setEndOfResults(true);
-  }
-
   if (gallery.childNodes.length >= 40) {
     setCurrentPage(1);
   }
@@ -47,9 +43,6 @@ const handleShowingLoadMoreNutton = () => {
   loadMoreButton.style.display = 'none';
 
   const observer = new IntersectionObserver(entries => {
-    if (currentPage === 14) {
-      setEndOfResults(true);
-    }
     const lastPhotoCard = entries[0];
     if (!lastPhotoCard.isIntersecting) return;
 
@@ -62,3 +55,6 @@ const handleShowingLoadMoreNutton = () => {
 };
 
 export { handleShowingLoadMoreNutton };
+setInterval(() => {
+  console.log(gallery.childNodes.length);
+}, 2000);

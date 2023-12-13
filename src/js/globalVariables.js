@@ -3,6 +3,7 @@ let imagesPerPage;
 let currentSearch;
 let firstFetch;
 let endOfResults;
+let totalImages;
 
 const setCurrentSearch = newSearch => {
   currentSearch = newSearch;
@@ -27,6 +28,10 @@ const setEndOfResults = bool => {
   endOfResults = bool;
 };
 
+const setTotalImages = value => {
+  totalImages = value;
+};
+
 export {
   currentPage,
   imagesPerPage,
@@ -39,4 +44,6 @@ export {
   endOfResults,
   setEndOfResults,
   resetCurrentPage,
+  totalImages,
+  setTotalImages,
 };
