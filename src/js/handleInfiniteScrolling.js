@@ -1,3 +1,5 @@
+import Notiflix from 'notiflix';
+
 import {
   currentSearch,
   setCurrentSearch,
@@ -6,6 +8,7 @@ import {
   setCurrentPage,
   endOfResults,
   setEndOfResults,
+  totalImages,
 } from './globalVariables.js';
 
 import fetchPixaBayApi from './fetchPixaBayAPI.js';
@@ -48,6 +51,14 @@ const handleShowingLoadMoreNutton = () => {
 
     if (!endOfResults) {
       loadMoreButton.style.display = 'block';
+    }
+
+    if (gallery.childNodes.length >= totalImages && endOfResults === false) {
+      setEndOfResults(true);
+      loadMoreButton.style.display = 'none';
+      Notiflix.Notify.failure(
+        "We're sorry, but you've reached the end of search results."
+      );
     }
   });
 

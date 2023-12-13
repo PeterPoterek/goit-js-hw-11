@@ -16,12 +16,7 @@ const loadMoreButton = document.querySelector('.load-more');
 const gallery = document.querySelector('#gallery');
 
 const fetchPixaBayApi = async (search, currentPage, imagesPerPage) => {
-  if (gallery.childNodes.length >= totalImages || endOfResults) {
-    Notiflix.Notify.failure(
-      "We're sorry, but you've reached the end of search results."
-    );
-    loadMoreButton.style.display = 'none';
-    setEndOfResults(true);
+  if (endOfResults) {
     return;
   }
 
